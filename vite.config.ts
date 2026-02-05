@@ -14,8 +14,7 @@ export default defineConfig({
     tailwindcss(),
     react(),
     VitePWA({
-      registerType: "prompt",
-      injectRegister: "auto",
+      registerType: "autoUpdate",
 
       pwaAssets: {
         disabled: false,
