@@ -2,9 +2,6 @@ import "./App.css";
 
 import { useState } from "react";
 
-import appLogo from "/favicon.svg";
-
-import reactLogo from "./assets/react.svg";
 import PWABadge from "./PWABadge.tsx";
 
 export default function App() {
@@ -12,15 +9,8 @@ export default function App() {
 
   return (
     <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={appLogo} className="logo" alt="vite-pwa logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
       <h1>vite-pwa</h1>
+      <h3>{VERSION}</h3>
       <div className="card">
         <button onClick={() => setCount((count) => count + 1)}>
           count is {count}

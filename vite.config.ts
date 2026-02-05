@@ -3,6 +3,10 @@ import { join } from "path";
 import { defineConfig } from "vite";
 import { VitePWA } from "vite-plugin-pwa";
 
+import { getBuildVersion } from "./scripts/tool";
+
+const VERSION = getBuildVersion();
+
 // https://vitejs.dev/config/
 export default defineConfig({
   plugins: [
@@ -30,7 +34,7 @@ export default defineConfig({
       },
 
       devOptions: {
-        enabled: false,
+        enabled: true,
         navigateFallback: "index.html",
         suppressWarnings: true,
         type: "module",
@@ -43,4 +47,7 @@ export default defineConfig({
     },
   },
   base: "./",
+  define: {
+    VERSION: `'${VERSION}'`,
+  },
 });
