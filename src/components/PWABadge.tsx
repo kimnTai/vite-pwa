@@ -3,7 +3,7 @@ import { useRegisterSW } from "virtual:pwa-register/react";
 export default function PWABadge() {
   // 目前已停用週期性同步，如需啟用請調整此數值（單位為毫秒）
   // 若不需要週期性同步，可移除 onRegisteredSW callback 與 registerPeriodicSync 函式
-  const period = 0;
+  const period = 15_000;
 
   const {
     needRefresh: [needRefresh, setNeedRefresh],
