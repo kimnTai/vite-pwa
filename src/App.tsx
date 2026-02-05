@@ -7,7 +7,7 @@ import appLogo from "/favicon.svg";
 import reactLogo from "./assets/react.svg";
 import PWABadge from "./PWABadge.tsx";
 
-function App() {
+export default function App() {
   const [count, setCount] = useState(0);
 
   return (
@@ -36,5 +36,3 @@ function App() {
     </>
   );
 }
-
-export default App;
