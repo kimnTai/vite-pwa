@@ -11,7 +11,7 @@ export default function App() {
       <div className="w-full max-w-md space-y-6 rounded-xl bg-gray-800 p-6 shadow-lg">
         {/* Title */}
         <div className="space-y-1 text-center">
-          <h1 className="text-2xl font-bold text-gray-100">vite-pwa</h1>
+          <h1 className="text-2xl font-bold text-gray-100">vite-pwa-update</h1>
           <VersionBadge></VersionBadge>
         </div>
 
