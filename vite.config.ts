@@ -25,8 +25,8 @@ export default defineConfig({
       manifest: {
         name: "vite-pwa",
         short_name: "vite-pwa",
-        description: "哈哈哈",
-        theme_color: "#ffffff",
+        description: "我是描述我是描述",
+        theme_color: "#b68bc9",
       },
 
       workbox: {
