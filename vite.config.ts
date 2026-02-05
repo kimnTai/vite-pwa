@@ -1,3 +1,4 @@
+import tailwindcss from "@tailwindcss/vite";
 import react from "@vitejs/plugin-react";
 import { join } from "path";
 import { defineConfig } from "vite";
@@ -10,6 +11,7 @@ const VERSION = getBuildVersion();
 // https://vitejs.dev/config/
 export default defineConfig({
   plugins: [
+    tailwindcss(),
     react(),
     VitePWA({
       registerType: "prompt",

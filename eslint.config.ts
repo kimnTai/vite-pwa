@@ -11,7 +11,7 @@ import tseslint from "typescript-eslint";
 export default defineConfig([
   eslintPluginPrettierRecommended,
   reactHooks.configs.flat.recommended,
-  globalIgnores(["dist"]),
+  globalIgnores(["dist", "dev-dist"]),
   {
     files: ["**/*.{ts,tsx}"],
     extends: [
@@ -30,6 +30,8 @@ export default defineConfig([
       "@stylistic": stylistic,
     },
     rules: {
+      curly: "error",
+
       "simple-import-sort/imports": "error",
       "simple-import-sort/exports": "error",
 
