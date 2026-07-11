@@ -2,6 +2,7 @@ import backgroundUrl from "@/assets/background.webp";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
 import ImageOcr from "./components/ImageOcr.tsx";
+import InstallPrompt from "./components/InstallPrompt.tsx";
 import PWABadge from "./components/PWABadge.tsx";
 import { VersionBadge } from "./components/VersionBadge.tsx";
 
@@ -27,6 +28,11 @@ export default function App() {
         <CardContent className="space-y-6">
           {/* OCR */}
           <ImageOcr />
+
+          {/* PWA 安裝提示（Android 自訂按鈕 / iOS 手動引導） */}
+          <div className="flex justify-center">
+            <InstallPrompt />
+          </div>
 
           {/* PWA badge */}
           <div className="flex justify-center">
