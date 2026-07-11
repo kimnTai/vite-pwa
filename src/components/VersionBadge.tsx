@@ -1,3 +1,5 @@
+import { Badge } from "@/components/ui/badge";
+
 export function VersionBadge() {
   const versionNumber = Number(VERSION.split(".").join(""));
 
@@ -20,8 +22,8 @@ export function VersionBadge() {
   const color = numberToColor(versionNumber);
 
   return (
-    <h3 className="text-sm font-semibold" style={{ color }}>
+    <Badge variant="outline" style={{ color, borderColor: color }}>
       {VERSION}
-    </h3>
+    </Badge>
   );
 }

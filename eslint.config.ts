@@ -48,6 +48,9 @@ export default defineConfig([
       "prettier/prettier": ["error", { endOfLine: "auto" }],
 
       "spaced-comment": ["error", "always", { markers: ["/"] }],
+
+      // shadcn ui 元件常於同檔匯出元件與 variants（cva），故關閉此規則
+      "react-refresh/only-export-components": "off",
     },
   },
 ]);

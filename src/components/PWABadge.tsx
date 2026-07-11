@@ -1,5 +1,8 @@
 import { useRegisterSW } from "virtual:pwa-register/react";
 
+import { Button } from "@/components/ui/button";
+import { Card } from "@/components/ui/card";
+
 export default function PWABadge() {
   // 目前已停用週期性同步，如需啟用請調整此數值（單位為毫秒）
   // 若不需要週期性同步，可移除 onRegisteredSW callback 與 registerPeriodicSync 函式
@@ -34,30 +37,24 @@ export default function PWABadge() {
     <>
       {needRefresh && (
         <div className="fixed inset-x-0 bottom-4 z-50 flex justify-center px-4">
-          <div
+          <Card
             role="alert"
             aria-labelledby="toast-message"
-            className="w-full max-w-md rounded-xl border border-gray-700 bg-gray-800 p-4 text-gray-100 shadow-lg"
+            className="w-full max-w-md gap-3 p-4 shadow-lg"
           >
-            <p id="toast-message" className="mb-3 text-sm text-gray-300">
+            <p id="toast-message" className="text-sm text-muted-foreground">
               已有新版本內容，重新載入即可更新。
             </p>
 
             <div className="flex justify-end gap-2">
-              <button
-                onClick={() => void updateServiceWorker(true)}
-                className="rounded-lg bg-indigo-600 px-3 py-1.5 text-sm font-medium text-white transition hover:bg-indigo-500"
-              >
+              <Button size="sm" onClick={() => void updateServiceWorker(true)}>
                 重新載入
-              </button>
-              <button
-                onClick={close}
-                className="rounded-lg border border-gray-600 px-3 py-1.5 text-sm text-gray-300 transition hover:bg-gray-700"
-              >
+              </Button>
+              <Button size="sm" variant="outline" onClick={close}>
                 關閉
-              </button>
+              </Button>
             </div>
-          </div>
+          </Card>
         </div>
       )}
     </>

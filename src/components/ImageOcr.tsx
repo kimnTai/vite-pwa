@@ -1,6 +1,9 @@
 import { useEffect, useRef, useState } from "react";
 import { PSM } from "tesseract.js";
 
+import { Button } from "@/components/ui/button";
+import { Progress } from "@/components/ui/progress";
+import { Textarea } from "@/components/ui/textarea";
 import { useOcr } from "@/hooks/useOcr";
 import { cn } from "@/lib/utils";
 import {
@@ -11,7 +14,7 @@ import {
 } from "@/utils/prizeTemplate";
 
 export default function ImageOcr() {
-  const { runBatch, warmup, status, progress, statusLabel, error } = useOcr();
+  const { runBatch, status, progress, statusLabel, error } = useOcr();
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
   const [text, setText] = useState("");
   const [copied, setCopied] = useState(false);
@@ -19,11 +22,6 @@ export default function ImageOcr() {
   const [inputError, setInputError] = useState<string | null>(null);
   const [lastFile, setLastFile] = useState<File | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
-
-  // 進頁面即在背景預載 OCR 引擎與語言檔，讓首次辨識免等下載
-  useEffect(() => {
-    warmup();
-  }, [warmup]);
 
   useEffect(() => {
     return () => {
@@ -125,7 +123,7 @@ export default function ImageOcr() {
   return (
     <div
       onPaste={onPaste}
-      className="space-y-4 rounded-lg border border-gray-700 bg-gray-900/40 p-3 sm:p-4"
+      className="space-y-4 rounded-lg border border-border bg-muted/30 p-3 sm:p-4"
     >
       {/* 拖放 / 選擇 / 貼上 */}
       <div
@@ -139,14 +137,16 @@ export default function ImageOcr() {
         className={cn(
           "flex cursor-pointer flex-col items-center justify-center gap-1 rounded-lg border-2 border-dashed p-6 text-center transition",
           dragOver
-            ? "border-indigo-400 bg-indigo-500/10"
-            : "border-gray-600 hover:border-gray-500",
+            ? "border-primary bg-primary/10"
+            : "border-input hover:border-muted-foreground/60",
         )}
       >
-        <p className="text-sm font-medium text-gray-200">
+        <p className="text-sm font-medium text-foreground">
           點擊選擇圖片，或拖放至此
         </p>
-        <p className="text-xs text-gray-400">也可直接貼上（Ctrl/⌘ + V）</p>
+        <p className="text-xs text-muted-foreground">
+          也可直接貼上（Ctrl/⌘ + V）
+        </p>
         <input
           ref={fileInputRef}
           type="file"
@@ -156,22 +156,24 @@ export default function ImageOcr() {
         />
       </div>
 
-      {inputError && <p className="text-sm text-red-400">{inputError}</p>}
+      {inputError && <p className="text-sm text-destructive">{inputError}</p>}
 
       {/* 重新辨識 */}
       {lastFile && (
-        <button
+        <Button
+          variant="outline"
+          size="lg"
+          className="w-full"
           onClick={() => lastFile && void runOcr(lastFile)}
           disabled={busy}
-          className="w-full rounded-lg border border-gray-600 px-3 py-1.5 text-sm text-gray-200 transition hover:bg-gray-700 disabled:opacity-50"
         >
           重新辨識
-        </button>
+        </Button>
       )}
 
       {/* 預覽 */}
       {previewUrl && (
-        <div className="overflow-hidden rounded-lg border border-gray-700">
+        <div className="overflow-hidden rounded-lg border border-border">
           <img
             src={previewUrl}
             alt="待辨識圖片預覽"
@@ -183,40 +185,34 @@ export default function ImageOcr() {
       {/* 進度 */}
       {busy && (
         <div className="space-y-1">
-          <div className="flex justify-between text-xs text-gray-400">
+          <div className="flex justify-between text-xs text-muted-foreground">
             <span>{statusLabel}</span>
             <span>{progress}%</span>
           </div>
-          <div className="h-2 w-full overflow-hidden rounded-full bg-gray-700">
-            <div
-              className="h-full rounded-full bg-indigo-500 transition-all"
-              style={{ width: `${progress}%` }}
-            />
-          </div>
+          <Progress value={progress} className="h-2" />
         </div>
       )}
 
-      {error && <p className="text-sm text-red-400">{error}</p>}
+      {error && <p className="text-sm text-destructive">{error}</p>}
 
       {/* 結果 */}
       {status === "done" && (
         <div className="space-y-2">
           <div className="flex items-center justify-between">
-            <span className="text-sm font-medium text-gray-200">辨識結果</span>
-            <button
-              onClick={() => void copyText()}
-              className="rounded-lg bg-indigo-600 px-3 py-1.5 text-sm font-medium text-white transition hover:bg-indigo-500"
-            >
+            <span className="text-sm font-medium text-foreground">
+              辨識結果
+            </span>
+            <Button size="sm" onClick={() => void copyText()}>
               {copied ? "已複製" : "複製"}
-            </button>
+            </Button>
           </div>
-          <textarea
+          <Textarea
             value={text}
             onChange={(e) => setText(e.target.value)}
             rows={9}
-            className="max-h-72 w-full resize-y overflow-auto rounded-lg border border-gray-700 bg-gray-900 p-3 text-sm text-gray-100 focus:border-indigo-500 focus:outline-none"
+            className="max-h-72 resize-y overflow-auto"
           />
-          <p className="text-xs text-gray-500">
+          <p className="text-xs text-muted-foreground">
             結構化擷取針對「核心自选宝箱」固定版面；如有誤判可直接在上方編輯修正。
           </p>
         </div>

@@ -43,14 +43,6 @@ export function useOcr() {
   const [statusLabel, setStatusLabel] = useState("");
   const [error, setError] = useState<string | null>(null);
 
-  useEffect(() => {
-    return () => {
-      void workerRef.current?.terminate();
-      workerRef.current = null;
-      workerPromiseRef.current = null;
-    };
-  }, []);
-
   // silent=true 供背景預載使用，不更動可見的 status（避免頁面一載入就顯示進度）
   const ensureWorker = useCallback((silent = false) => {
     // 尚未就緒且非背景預載時，顯示「載入引擎」狀態
@@ -77,12 +69,18 @@ export function useOcr() {
     return workerPromiseRef.current;
   }, []);
 
-  // 背景預載：頁面載入後先下載引擎與語言檔，讓首次辨識免等下載
-  const warmup = useCallback(() => {
+  // 掛載時背景預載引擎與語言檔（讓首次辨識免等下載），卸載時清理 worker
+  useEffect(() => {
     void ensureWorker(true);
+
+    return () => {
+      void workerRef.current?.terminate();
+      workerRef.current = null;
+      workerPromiseRef.current = null;
+    };
   }, [ensureWorker]);
 
-  const runTask = useCallback(async (worker: Worker, task: BatchTask) => {
+  const runTask = async (worker: Worker, task: BatchTask) => {
     // 切換語言（例如分數格用 eng，中文列用 chi_sim+eng），避免中文模型干擾數字
     if (task.langs && task.langs !== activeLangsRef.current) {
       await worker.reinitialize(task.langs);
@@ -98,40 +96,37 @@ export function useOcr() {
     const result = await worker.recognize(task.image);
 
     return result.data.text;
-  }, []);
+  };
 
   // 依序辨識多個區域，回報「已完成 / 總數」進度
-  const runBatch = useCallback(
-    async (tasks: BatchTask[]) => {
-      setError(null);
-      setProgress(0);
+  const runBatch = async (tasks: BatchTask[]) => {
+    setError(null);
+    setProgress(0);
 
-      try {
-        const worker = await ensureWorker();
+    try {
+      const worker = await ensureWorker();
 
-        setStatus("recognizing");
+      setStatus("recognizing");
 
-        const results: string[] = [];
+      const results: string[] = [];
 
-        for (let i = 0; i < tasks.length; i++) {
-          setStatusLabel(`擷取欄位 ${i + 1}/${tasks.length}…`);
-          setProgress(Math.round((i / tasks.length) * 100));
-          results.push(await runTask(worker, tasks[i]));
-        }
-
-        setProgress(100);
-        setStatus("done");
-
-        return results;
-      } catch (err) {
-        setStatus("error");
-        setError(err instanceof Error ? err.message : "辨識失敗，請再試一次");
-
-        return null;
+      for (let i = 0; i < tasks.length; i++) {
+        setStatusLabel(`擷取欄位 ${i + 1}/${tasks.length}…`);
+        setProgress(Math.round((i / tasks.length) * 100));
+        results.push(await runTask(worker, tasks[i]));
       }
-    },
-    [ensureWorker, runTask],
-  );
 
-  return { runBatch, warmup, status, progress, statusLabel, error };
+      setProgress(100);
+      setStatus("done");
+
+      return results;
+    } catch (err) {
+      setStatus("error");
+      setError(err instanceof Error ? err.message : "辨識失敗，請再試一次");
+
+      return null;
+    }
+  };
+
+  return { runBatch, status, progress, statusLabel, error };
 }

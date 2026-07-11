@@ -28,7 +28,7 @@ export default defineConfig({
       },
 
       workbox: {
-        globPatterns: ["**/*.{js,css,html,svg,png,ico}"],
+        globPatterns: ["**/*.{js,css,html,svg,png,ico,webp}"],
         cleanupOutdatedCaches: true,
         clientsClaim: true,
       },
@@ -45,6 +45,12 @@ export default defineConfig({
     tsconfigPaths: true,
   },
   base: "./",
+  server: {
+    port: 6173,
+  },
+  preview: {
+    port: 6173,
+  },
   define: {
     VERSION: `'${VERSION}'`,
   },
