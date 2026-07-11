@@ -23,3 +23,6 @@ dev-dist
 *.njsproj
 *.sln
 *.sw?
+
+# Tesseract.js 語言資料快取（測試時下載）
+*.traineddata

@@ -45,7 +45,7 @@ export default function PWABadge() {
 
             <div className="flex justify-end gap-2">
               <button
-                onClick={() => updateServiceWorker(true)}
+                onClick={() => void updateServiceWorker(true)}
                 className="rounded-lg bg-indigo-600 px-3 py-1.5 text-sm font-medium text-white transition hover:bg-indigo-500"
               >
                 重新載入

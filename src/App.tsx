@@ -1,33 +1,22 @@
-import { useState } from "react";
-
+import ImageOcr from "./components/ImageOcr.tsx";
 import PWABadge from "./components/PWABadge.tsx";
 import { VersionBadge } from "./components/VersionBadge.tsx";
 
 export default function App() {
-  const [count, setCount] = useState(0);
-
   return (
-    <div className="flex min-h-screen items-center justify-center bg-gray-900 px-4 text-gray-100">
-      <div className="w-full max-w-md space-y-6 rounded-xl bg-gray-800 p-6 shadow-lg">
+    <div className="flex min-h-screen items-start justify-center bg-gray-900 px-3 py-6 text-gray-100 sm:items-center sm:px-4">
+      <div className="w-full max-w-md space-y-6 rounded-xl bg-gray-800 p-4 shadow-lg sm:max-w-lg sm:p-6">
         {/* Title */}
         <div className="space-y-1 text-center">
-          <h1 className="text-2xl font-bold text-gray-100">vite-pwa-update</h1>
+          <h1 className="text-xl font-bold text-gray-100 sm:text-2xl">
+            圖片文字辨識
+          </h1>
+          <p className="text-xs text-gray-400">上傳圖片，於前端解析其中文字</p>
           <VersionBadge></VersionBadge>
         </div>
 
-        {/* Card */}
-        <div className="space-y-4 rounded-lg border border-gray-700 bg-gray-900/40 p-4">
-          <button
-            onClick={() => setCount((count) => count + 1)}
-            className="w-full rounded-lg bg-indigo-600 px-4 py-2 font-medium text-white transition hover:bg-indigo-500 active:scale-[0.98]"
-          >
-            count is {count}
-          </button>
-
-          <p className="text-center text-lg font-semibold text-gray-300 underline">
-            Hello world!
-          </p>
-        </div>
+        {/* OCR */}
+        <ImageOcr />
 
         {/* PWA badge */}
         <div className="flex justify-center">

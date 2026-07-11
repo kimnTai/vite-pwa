@@ -25,6 +25,16 @@ export default defineConfig([
     },
   },
   {
+    files: ["src/**/*.{ts,tsx}", "test/**/*.ts"],
+    extends: [tseslint.configs.recommendedTypeChecked],
+    languageOptions: {
+      parserOptions: {
+        projectService: true,
+        tsconfigRootDir: import.meta.dirname,
+      },
+    },
+  },
+  {
     plugins: {
       "simple-import-sort": simpleImportSort,
       "@stylistic": stylistic,
