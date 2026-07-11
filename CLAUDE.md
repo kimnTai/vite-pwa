@@ -46,6 +46,14 @@ bun run test:browser # 只跑真實瀏覽器整合測試（需已裝 Chromium �
 - **PWA 圖示資源**：`pwa-assets.config.ts` 定義以 `public/favicon.svg` 為來源，透過
   `@vite-pwa/assets-generator` 產生各尺寸圖示。`favicon.svg` 為切合 OCR 主題的自繪圖示
   （紫色底 + 掃描取景框 + 文字列），修改 build 時會重新產生所有尺寸。
+- **啟動畫面（SplashScreen）**：分平台處理，皆用深色底 `#191320`（配紫色主題）。
+  - **Android/Chrome**：以 manifest 的 `background_color` + `theme_color` + 圖示自動生成，
+    設定於 `vite.config.ts` 的 `manifest`（含 `display: "standalone"`）。
+  - **iOS Safari**：不看 manifest，需靜態啟動圖。`pwa-assets.config.ts` 用
+    `combinePresetAndAppleSplashScreens` 在 `minimal2023Preset` 上疊加 `appleSplashScreens`，
+    build 時產生各機型 `apple-splash-*.png`（light/dark、直/橫），並由 vite-plugin-pwa 的
+    `pwaAssets` 自動注入帶 media query 的 `apple-touch-startup-image` link 到 `index.html`。
+    改底色需同步 `pwa-assets.config.ts` 的 `SPLASH_BACKGROUND` 與 manifest 的 `background_color`。
 - **路徑別名**：`@` 對應到 `src/`（見 `vite.config.ts` 的 `resolve.tsconfigPaths` 與 tsconfig paths）。
   根 `tsconfig.json` 也另外宣告了 `paths`，供 shadcn CLI 解析別名用。
 - **UI 套件（shadcn）**：以 shadcn（`radix-nova` 樣式，設定見 `components.json`）作為元件庫。
