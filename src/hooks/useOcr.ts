@@ -36,6 +36,7 @@ function toStatusLabel(status: string) {
 
 export function useOcr() {
   const workerRef = useRef<Worker | null>(null);
+  const workerPromiseRef = useRef<Promise<Worker> | null>(null);
   const activeLangsRef = useRef(DEFAULT_LANGS);
   const [status, setStatus] = useState<OcrStatus>("idle");
   const [progress, setProgress] = useState(0);
@@ -46,18 +47,20 @@ export function useOcr() {
     return () => {
       void workerRef.current?.terminate();
       workerRef.current = null;
+      workerPromiseRef.current = null;
     };
   }, []);
 
-  const ensureWorker = useCallback(async () => {
-    if (workerRef.current) {
-      return workerRef.current;
+  // silent=true 供背景預載使用，不更動可見的 status（避免頁面一載入就顯示進度）
+  const ensureWorker = useCallback((silent = false) => {
+    // 尚未就緒且非背景預載時，顯示「載入引擎」狀態
+    if (!silent && !workerRef.current) {
+      setStatus("loading");
+      setStatusLabel("載入辨識引擎…");
     }
 
-    setStatus("loading");
-    setStatusLabel("載入辨識引擎…");
-
-    workerRef.current = await createWorker(LANGS, 1, {
+    // 記憶化建立中的 Promise，避免預載與辨識同時觸發而建立兩個 worker
+    workerPromiseRef.current ??= createWorker(LANGS, 1, {
       logger: (m) => {
         setStatusLabel(toStatusLabel(m.status));
 
@@ -65,10 +68,19 @@ export function useOcr() {
           setProgress(Math.round(m.progress * 100));
         }
       },
+    }).then((worker) => {
+      workerRef.current = worker;
+
+      return worker;
     });
 
-    return workerRef.current;
+    return workerPromiseRef.current;
   }, []);
+
+  // 背景預載：頁面載入後先下載引擎與語言檔，讓首次辨識免等下載
+  const warmup = useCallback(() => {
+    void ensureWorker(true);
+  }, [ensureWorker]);
 
   const runTask = useCallback(async (worker: Worker, task: BatchTask) => {
     // 切換語言（例如分數格用 eng，中文列用 chi_sim+eng），避免中文模型干擾數字
@@ -121,5 +133,5 @@ export function useOcr() {
     [ensureWorker, runTask],
   );
 
-  return { runBatch, status, progress, statusLabel, error };
+  return { runBatch, warmup, status, progress, statusLabel, error };
 }

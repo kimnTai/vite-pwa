@@ -11,7 +11,7 @@ import {
 } from "@/utils/prizeTemplate";
 
 export default function ImageOcr() {
-  const { runBatch, status, progress, statusLabel, error } = useOcr();
+  const { runBatch, warmup, status, progress, statusLabel, error } = useOcr();
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
   const [text, setText] = useState("");
   const [copied, setCopied] = useState(false);
@@ -19,6 +19,11 @@ export default function ImageOcr() {
   const [inputError, setInputError] = useState<string | null>(null);
   const [lastFile, setLastFile] = useState<File | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
+
+  // 進頁面即在背景預載 OCR 引擎與語言檔，讓首次辨識免等下載
+  useEffect(() => {
+    warmup();
+  }, [warmup]);
 
   useEffect(() => {
     return () => {
