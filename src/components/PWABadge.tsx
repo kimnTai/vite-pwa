@@ -33,6 +33,20 @@ export default function PWABadge() {
     setNeedRefresh(false);
   }
 
+  // iOS 主畫面 Web Clip（standalone）常不觸發 controllerchange，導致 vite-plugin-pwa
+  // 等不到事件而不會 reload。這裡加保底：若短時間內沒因 controllerchange 重載，就強制重載
+  function reload() {
+    const timer = window.setTimeout(() => window.location.reload(), 2000);
+
+    navigator.serviceWorker?.addEventListener(
+      "controllerchange",
+      () => window.clearTimeout(timer),
+      { once: true },
+    );
+
+    void updateServiceWorker(true);
+  }
+
   return (
     <>
       {needRefresh && (
@@ -47,7 +61,7 @@ export default function PWABadge() {
             </p>
 
             <div className="flex justify-end gap-2">
-              <Button size="sm" onClick={() => void updateServiceWorker(true)}>
+              <Button size="sm" onClick={reload}>
                 重新載入
               </Button>
               <Button size="sm" variant="outline" onClick={close}>
