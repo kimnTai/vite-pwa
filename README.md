@@ -16,6 +16,23 @@ React 19 + TypeScript + Vite 8 的 PWA。使用者上傳圖片後，**完全在�
 - UI 以 [shadcn](https://ui.shadcn.com/)（`radix-nova` 樣式）建構，支援 light / dark / system 主題切換（按 `d` 快速切換）。
 - Mobile-first RWD（以手機為主），含主題感知的靜態背景圖。
 
+## 安裝到主畫面
+
+- **Android / Chrome**：瀏覽器備妥安裝事件後，介面會出現「安裝到主畫面」按鈕，一鍵安裝（standalone 全螢幕、走 Service Worker 離線快取）。
+- **iOS Safari**：沒有安裝事件，提供兩種方式，差異如下：
+
+| | ① 手動「加入主畫面」 | ② 描述檔一鍵安裝（`.mobileconfig`） |
+|---|---|---|
+| 操作 | Safari 分享鈕 →「加入主畫面」 | 點介面連結 → 安裝描述檔（設定 → 一般 → VPN與裝置管理 → 安裝） |
+| 觸發瀏覽器 | 僅限 Safari | 僅限 Safari（Chrome iOS 點連結不會跳安裝） |
+| 離線快取 | ✅ 吃 Service Worker 預快取，離線可用 | ⚠️ 獨立網頁殼，**不吃** SW 快取，離線能力弱 |
+| 內容更新 | 自動跟隨網站 | 改 URL/圖示需重發描述檔重裝 |
+| 適用情境 | 一般使用者（**主線**） | 企業內部／掃碼快速派發（輔助） |
+
+> 兩者是**不同的兩個主畫面圖示**。推薦一般使用者走 ①（離線能力完整）；② 的描述檔位於 [`public/webclip.mobileconfig`](./public/webclip.mobileconfig)，部署後在 `/vite-pwa/webclip.mobileconfig`。
+>
+> iOS 全螢幕與啟動圖不看 manifest，靠 `index.html` 的 `apple-mobile-web-app-*` meta 與 `apple-touch-startup-image` 控制；細節見 [`CLAUDE.md`](./CLAUDE.md)。
+
 ## 常用指令
 
 ```bash
