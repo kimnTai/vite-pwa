@@ -5,6 +5,12 @@
 
 @custom-variant dark (&:is(.dark *));
 
+/* 垂直間距 = 基礎 1.5rem + iOS 安全區，避免 black-translucent 下內容被瀏海／home indicator 蓋住 */
+@utility py-safe {
+  padding-top: calc(1.5rem + env(safe-area-inset-top));
+  padding-bottom: calc(1.5rem + env(safe-area-inset-bottom));
+}
+
 @theme inline {
     --font-heading: var(--font-sans);
     --font-sans: 'Inter Variable', sans-serif;

@@ -21,9 +21,9 @@ export default defineConfig({
       },
 
       manifest: {
-        name: "vite-pwa",
-        short_name: "vite-pwa",
-        description: "我是描述我是描述",
+        name: "核心速記",
+        short_name: "核心速記",
+        description: "核心自选宝箱畫面 OCR 辨識，快速擷取結構化欄位",
         theme_color: "#b68bc9",
         // Android 以 standalone 開啟時，會用 background_color + 圖示自動組出啟動畫面
         background_color: "#191320",

@@ -9,7 +9,7 @@ import { VersionBadge } from "./components/VersionBadge.tsx";
 export default function App() {
   return (
     <div
-      className="relative flex min-h-screen items-start justify-center bg-background bg-cover bg-center bg-no-repeat px-3 py-6 text-foreground sm:items-center sm:px-4"
+      className="relative flex min-h-screen items-start justify-center bg-background bg-cover bg-center bg-no-repeat px-3 py-safe text-foreground sm:items-center sm:px-4"
       style={{ backgroundImage: `url(${backgroundUrl})` }}
     >
       {/* 半透明遮罩：提升卡片可讀性，並隨主題深淺自動調整 */}
