@@ -52,6 +52,13 @@ export default function InstallPrompt() {
           <SquarePlus className="inline size-3.5" aria-label="加入主畫面" />
           「加入主畫面」即可。
         </p>
+
+        <a
+          href={`${import.meta.env.BASE_URL}webclip.mobileconfig`}
+          className="text-xs text-muted-foreground underline underline-offset-2"
+        >
+          或一鍵安裝描述檔（需用 Safari 開啟）
+        </a>
       </Card>
     );
   }
