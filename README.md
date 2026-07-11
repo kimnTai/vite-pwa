@@ -1,75 +1,46 @@
-# React + TypeScript + Vite
+# vite-pwa — 前端圖片文字辨識（OCR）
 
 https://kimntai.github.io/vite-pwa/
 
-此範本提供一個最簡化的設定，讓 React 在 Vite 中運作，並支援熱模組替換（HMR）以及一些 ESLint 規則。
+React 19 + TypeScript + Vite 8 的 PWA。使用者上傳圖片後，**完全在前端**（不經任何後端／雲端 API）
+用 [Tesseract.js](https://github.com/naptha/tesseract.js)（WebAssembly）辨識圖片中的文字。
 
-目前，有兩個官方外掛可用：
+主要功能是針對某遊戲「核心自选宝箱」畫面做**結構化欄位擷取**：依固定版面逐格裁切、二值化，
+精準讀出箱數、剩余奖励與 A~G、最终各獎項的分數，輸出成可編輯、可一鍵複製的文字。
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) 使用 [Babel](https://babeljs.io/)（或在 [rolldown-vite](https://vite.dev/guide/rolldown) 中使用時為 [oxc](https://oxc.rs)）來實現快速刷新（Fast Refresh）
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) 使用 [SWC](https://swc.rs/) 來實現快速刷新（Fast Refresh）
+## 特色
 
-## React 編譯器
+- 純前端 OCR，離線友善（PWA），不上傳圖片。
+- 上傳 / 拖放 / 貼上三種輸入；辨識進度條；結果可即時編輯修正。
+- 針對固定遊戲版面的模板擷取：相對比例座標，容忍等比縮放的不同解析度。
+- Mobile-first RWD（以手機為主）。
 
-此範本未啟用 React 編譯器，因為它會影響開發與建置的效能。如需添加，請參考[此文件](https://react.dev/learn/react-compiler/installation)。
+## 常用指令
 
-## 擴充 ESLint 設定
-
-如果您正在開發生產環境應用程式，建議更新設定以啟用類型感知的檢查規則：
-
-```js
-export default defineConfig([
-  globalIgnores(["dist"]),
-  {
-    files: ["**/*.{ts,tsx}"],
-    extends: [
-      // 其他設定...
-
-      // 移除 tseslint.configs.recommended，改為使用此設定
-      tseslint.configs.recommendedTypeChecked,
-      // 或者，使用此設定以啟用更嚴格的規則
-      tseslint.configs.strictTypeChecked,
-      // 選擇性地，加入此設定以啟用風格相關的規則
-      tseslint.configs.stylisticTypeChecked,
-
-      // 其他設定...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ["./tsconfig.node.json", "./tsconfig.app.json"],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // 其他選項...
-    },
-  },
-]);
+```bash
+bun run dev          # 開發伺服器
+bun run build        # 型別檢查 + 打包
+bun run lint         # ESLint（含型別感知規則）
+bun run test         # 全部測試（vitest：unit + browser）
+bun run test:unit    # 只跑 node 單元測試
+bun run test:browser # 只跑真實瀏覽器整合測試
+bun run deploy       # 部署 dist/ 到 GitHub Pages
 ```
 
-您也可以安裝 [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) 和 [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) 來取得 React 專用的檢查規則：
+> 執行 `test:browser` 前需先安裝瀏覽器：`bunx playwright install chromium`，且首次辨識需連網下載語言資料。
 
-```js
-// eslint.config.js
-import reactX from "eslint-plugin-react-x";
-import reactDom from "eslint-plugin-react-dom";
+## 專案結構（重點）
 
-export default defineConfig([
-  globalIgnores(["dist"]),
-  {
-    files: ["**/*.{ts,tsx}"],
-    extends: [
-      // 其他設定...
-      // 啟用 React 的檢查規則
-      reactX.configs["recommended-typescript"],
-      // 啟用 React DOM 的檢查規則
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ["./tsconfig.node.json", "./tsconfig.app.json"],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // 其他選項...
-    },
-  },
-]);
-```
+| 路徑 | 說明 |
+|---|---|
+| `src/components/ImageOcr.tsx` | OCR 主 UI（上傳/拖放/貼上、預覽、進度、結果、複製） |
+| `src/hooks/useOcr.ts` | 封裝 Tesseract worker，`runBatch` 逐區域辨識並回報進度 |
+| `src/utils/prizeTemplate.ts` | 模板擷取核心：欄位相對座標、二值化、結果組裝 |
+| `src/lib/utils.ts` | `cn`（shadcn 風格 className 合併） |
+| `test/` | Vitest 測試（unit + 真實瀏覽器整合，含 `fixtures/test.jpg`） |
+
+更多架構與程式碼風格說明見 [`CLAUDE.md`](./CLAUDE.md)。
+
+## 技術
+
+React 19 · TypeScript · Vite 8 · Tailwind CSS v4 · vite-plugin-pwa · Tesseract.js · Vitest（+ @vitest/browser）
