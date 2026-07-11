@@ -38,6 +38,9 @@ export function useOcr() {
   const workerRef = useRef<Worker | null>(null);
   const workerPromiseRef = useRef<Promise<Worker> | null>(null);
   const activeLangsRef = useRef(DEFAULT_LANGS);
+  // 批次辨識進行中時記錄「目前第幾格 / 共幾格」，讓 logger 把當前格的
+  // 內部 0→1 映射到整體進度的對應區間（避免與批次階梯值互相覆寫而閃爍）
+  const batchRef = useRef<{ index: number; total: number } | null>(null);
   const [status, setStatus] = useState<OcrStatus>("idle");
   const [progress, setProgress] = useState(0);
   const [statusLabel, setStatusLabel] = useState("");
@@ -54,6 +57,24 @@ export function useOcr() {
     // 記憶化建立中的 Promise，避免預載與辨識同時觸發而建立兩個 worker
     workerPromiseRef.current ??= createWorker(LANGS, 1, {
       logger: (m) => {
+        const batch = batchRef.current;
+
+        // 批次辨識中：只在辨識階段把當前格內部進度映射到整體區間，
+        // statusLabel 與 reinitialize/setParameters 階段交給 runBatch 掌控
+        if (batch) {
+          if (
+            m.status.includes("recognizing") &&
+            typeof m.progress === "number"
+          ) {
+            setProgress(
+              Math.round(((batch.index + m.progress) / batch.total) * 100),
+            );
+          }
+
+          return;
+        }
+
+        // 非批次（背景預載/下載模型）：直接反映 logger 回報的進度
         setStatusLabel(toStatusLabel(m.status));
 
         if (typeof m.progress === "number") {
@@ -111,6 +132,8 @@ export function useOcr() {
       const results: string[] = [];
 
       for (let i = 0; i < tasks.length; i++) {
+        // 進入下一格：更新共享 index，並先把進度設為該格起點（logger 由此往上爬）
+        batchRef.current = { index: i, total: tasks.length };
         setStatusLabel(`擷取欄位 ${i + 1}/${tasks.length}…`);
         setProgress(Math.round((i / tasks.length) * 100));
         results.push(await runTask(worker, tasks[i]));
@@ -125,6 +148,8 @@ export function useOcr() {
       setError(err instanceof Error ? err.message : "辨識失敗，請再試一次");
 
       return null;
+    } finally {
+      batchRef.current = null;
     }
   };
 
