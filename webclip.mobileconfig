@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+  <key>PayloadContent</key>
+  <array>
+    <dict>
+      <key>FullScreen</key>
+      <true/>
+      <key>Icon</key>
+      <data>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</data>
+      <key>IsRemovable</key>
+      <true/>
+      <key>Label</key>
+      <string>核心速記</string>
+      <key>PayloadIdentifier</key>
+      <string>io.github.kimntai.vite-pwa.webclip.clip</string>
+      <key>PayloadType</key>
+      <string>com.apple.webClip.managed</string>
+      <key>PayloadUUID</key>
+      <string>A1B2C3D4-0002-4000-8000-000000000002</string>
+      <key>PayloadVersion</key>
+      <integer>1</integer>
+      <key>Precomposed</key>
+      <true/>
+      <key>URL</key>
+      <string>https://kimntai.github.io/vite-pwa/</string>
+    </dict>
+  </array>
+  <key>PayloadDisplayName</key>
+  <string>核心速記 Web Clip</string>
+  <key>PayloadDescription</key>
+  <string>在主畫面新增「核心速記」全螢幕圖示</string>
+  <key>PayloadIdentifier</key>
+  <string>io.github.kimntai.vite-pwa.webclip</string>
+  <key>PayloadOrganization</key>
+  <string>photons</string>
+  <key>PayloadRemovalDisallowed</key>
+  <false/>
+  <key>PayloadType</key>
+  <string>Configuration</string>
+  <key>PayloadUUID</key>
+  <string>A1B2C3D4-0001-4000-8000-000000000001</string>
+  <key>PayloadVersion</key>
+  <integer>1</integer>
+</dict>
+</plist>
