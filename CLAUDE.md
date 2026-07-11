@@ -42,7 +42,9 @@ bun run test:browser # 只跑真實瀏覽器整合測試（需已裝 Chromium �
 - **PWA / Service Worker**：透過 `vite-plugin-pwa` 設定（`vite.config.ts`），`registerType` 為 `"prompt"`
   （手動觸發更新，而非自動 `autoUpdate`）。`src/components/PWABadge.tsx` 使用
   `virtual:pwa-register/react` 的 `useRegisterSW`，並額外實作了 `registerPeriodicSync`
-  週期性檢查更新（目前設為 15 秒，供開發測試；正式環境可依需求調整或移除）。
+  週期性檢查更新（`period` 目前為 15 秒且實際啟用；正式環境可依需求調整或設 `period = 0` 停用）。
+  更新偵測原理（`sw.js` byte-diff、precache manifest、prompt 模式流程）與快取行為詳見
+  `docs/pwa-update-mechanism.md`。
 - **PWA 圖示資源**：`pwa-assets.config.ts` 定義以 `public/favicon.svg` 為來源，透過
   `@vite-pwa/assets-generator` 產生各尺寸圖示。`favicon.svg` 為切合 OCR 主題的自繪圖示
   （紫色底 + 掃描取景框 + 文字列），修改 build 時會重新產生所有尺寸。
