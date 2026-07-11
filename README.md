@@ -11,9 +11,10 @@ React 19 + TypeScript + Vite 8 的 PWA。使用者上傳圖片後，**完全在�
 ## 特色
 
 - 純前端 OCR，離線友善（PWA），不上傳圖片。
-- 上傳 / 拖放 / 貼上三種輸入；辨識進度條；結果可即時編輯修正。
+- 上傳 / 拖放 / 貼上三種輸入；辨識進度條；結果可即時編輯修正；進頁面即背景預載引擎。
 - 針對固定遊戲版面的模板擷取：相對比例座標，容忍等比縮放的不同解析度。
-- Mobile-first RWD（以手機為主）。
+- UI 以 [shadcn](https://ui.shadcn.com/)（`radix-nova` 樣式）建構，支援 light / dark / system 主題切換（按 `d` 快速切換）。
+- Mobile-first RWD（以手機為主），含主題感知的靜態背景圖。
 
 ## 常用指令
 
@@ -36,6 +37,8 @@ bun run deploy       # 部署 dist/ 到 GitHub Pages
 | `src/components/ImageOcr.tsx` | OCR 主 UI（上傳/拖放/貼上、預覽、進度、結果、複製） |
 | `src/hooks/useOcr.ts` | 封裝 Tesseract worker，`runBatch` 逐區域辨識並回報進度 |
 | `src/utils/prizeTemplate.ts` | 模板擷取核心：欄位相對座標、二值化、結果組裝 |
+| `src/components/ui/` | shadcn 元件（`bunx shadcn@latest add <name>` 產生，設定見 `components.json`） |
+| `src/components/theme-provider.tsx` | 主題切換（light / dark / system，localStorage 記憶、按 `d` 切換） |
 | `src/lib/utils.ts` | `cn`（shadcn 風格 className 合併） |
 | `test/` | Vitest 測試（unit + 真實瀏覽器整合，含 `fixtures/test.jpg`） |
 
@@ -43,4 +46,4 @@ bun run deploy       # 部署 dist/ 到 GitHub Pages
 
 ## 技術
 
-React 19 · TypeScript · Vite 8 · Tailwind CSS v4 · vite-plugin-pwa · Tesseract.js · Vitest（+ @vitest/browser）
+React 19 · TypeScript · Vite 8 · Tailwind CSS v4 · shadcn（radix-nova）· vite-plugin-pwa · Tesseract.js · Vitest（+ @vitest/browser）
