@@ -3,6 +3,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
 import ImageOcr from "./components/ImageOcr.tsx";
 import InstallPrompt from "./components/InstallPrompt.tsx";
+import { OrientationGuard } from "./components/OrientationGuard.tsx";
 import PWABadge from "./components/PWABadge.tsx";
 import { VersionBadge } from "./components/VersionBadge.tsx";
 
@@ -12,6 +13,7 @@ export default function App() {
       className="relative flex min-h-screen items-start justify-center bg-background bg-cover bg-center bg-no-repeat px-3 py-safe text-foreground sm:items-center sm:px-4"
       style={{ backgroundImage: `url(${backgroundUrl})` }}
     >
+      <OrientationGuard />
       {/* 半透明遮罩：提升卡片可讀性，並隨主題深淺自動調整 */}
       <div className="pointer-events-none absolute inset-0 bg-background/60 backdrop-blur-xs" />
 

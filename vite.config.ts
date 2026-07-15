@@ -28,11 +28,11 @@ export default defineConfig({
         // Android 以 standalone 開啟時，會用 background_color + 圖示自動組出啟動畫面
         background_color: "#191320",
         display: "standalone",
-        orientation: "portrait", // 安裝為 PWA 後，偏好以直向顯示；實際支援依瀏覽器與系統而定
+        orientation: "portrait-primary", // 安裝為 PWA 後，鎖定正向直板；實際支援依瀏覽器與系統而定
       },
 
       workbox: {
-        globPatterns: ["**/*.{js,css,html,svg,png,ico,webp}"],
+        globPatterns: ["**/*.{js,css,html,svg,png,ico,webp,woff2}"],
         cleanupOutdatedCaches: true,
         clientsClaim: true,
       },
